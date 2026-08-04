@@ -1,0 +1,73 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1785831993759,
+  "projectRoot": "/Users/hyungsukkang/iter-cx/.github",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "profile": {
+      "path": "profile",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1785831993731,
+      "keyFiles": [
+        "README.md"
+      ]
+    },
+    "profile/assets": {
+      "path": "profile/assets",
+      "purpose": "Static assets",
+      "fileCount": 2,
+      "lastAccessed": 1785831993731,
+      "keyFiles": [
+        "banner.png",
+        "profile.png"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "profile/README.md",
+      "accessCount": 7,
+      "lastAccessed": 1785833302868,
+      "type": "file"
+    },
+    {
+      "path": "profile/assets/profile.png",
+      "accessCount": 2,
+      "lastAccessed": 1785833293613,
+      "type": "file"
+    },
+    {
+      "path": "profile/assets/banner.png",
+      "accessCount": 1,
+      "lastAccessed": 1785832130156,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
