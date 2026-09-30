@@ -1,99 +1,90 @@
 <div align="center">
-  <img src="assets/profile.png" alt="Rate" width="96" />
-</div>
-
-<div align="center">
   <picture>
     <source media="(prefers-color-scheme: light)" srcset="assets/rate-banner-light.png" />
-    <img src="assets/rate-banner-dark.png" alt="Rate — an onchain order book with pooled inventory" width="900" />
+    <img src="assets/rate-banner-dark.png" alt="Rate. Don't trade. Until you find your best rate." width="900" />
   </picture>
 </div>
 
 <div align="center">
 
-**A fully onchain central limit order book, with permissionless liquidity resting on it.**
+**Don't trade. Until you find your best rate.**
 
 </div>
 
 ---
 
-## Every market answers two questions
+## The rich don't trade. They hold.
 
-Every trading venue — onchain or not — has to solve two problems that are easy to
-conflate but genuinely separate:
+Most of crypto is built to make you trade more: perps, leverage, points for volume.
+Every extra trade is a fee someone else collects. The evidence has been in for a long time:
 
-- **Inventory** — who supplies the assets available to trade against, and who bears the
-  risk of holding them while prices move?
-- **Settlement** — given a desire to trade, how is the execution price determined, and how
-  is the trade actually carried out?
+- Of 66,465 US households, those that traded most earned **11.4%** a year while the market
+  returned **17.9%** (Barber & Odean, [*Trading Is Hazardous to Your Wealth*](https://onlinelibrary.wiley.com/doi/abs/10.1111/0022-1082.00226), 2000).
+- Of people who day-traded Brazilian equity futures for more than 300 days, **97% lost money**
+  (Chague, De-Losso & Giovannetti, [*Day Trading for a Living?*](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3423101), 2019).
 
-DeFi has only ever answered one well at a time. Constant-product AMMs answered both at
-once with a single bonding curve: the curve *is* the inventory and *is* the pricing rule,
-so an LP has no way to say "I won't sell below this price." Concentrated liquidity loosened
-that, but a v3 position still transacts at whatever the curve computes once price enters
-its range. Order books answer settlement the way every mature financial market does — with
-explicit, price-prioritised quotes — but historically hand inventory back to professional
-market makers operating through a venue that hosts the book.
+Wealth is built the other way: by owning and holding. So Rate pays holders.
 
-**Rate answers both on one book.**
+## Get paid to hold
+
+A liquidity provider is the other side of every trade. On most DEXs that side gets a bad deal:
+a curve sells to anyone at a price it can't refuse, and the LP eats the difference. On Rate you
+are that side on your own terms.
+
+- **Bring the token you already own.** A one-token deposit swaps nothing: no fee to get in,
+  no price moved against you, no counterparty needed. Your token rests in a band ladder as
+  inventory.
+- **Set your rate.** Each band fills only at the pool's time-weighted anchor price, give or
+  take a tolerance bounded by the pair's slippage limit. There is no curve selling cheap to
+  whoever arrives first.
+- **Traders pay the fee. Holders collect it.** Traders who convert your inventory pay the
+  fee to the band's LPs. Fees vest over time, so patient capital earns in full and
+  hit-and-run liquidity doesn't.
+
+And when you do trade, trade at your rate: every fill on an open onchain order book, at a
+price you chose, self-custody the whole way.
 
 ## How it works
 
 - **Settlement is a fully onchain CLOB.** `MatchingEngine.sol` + `Orderbook.sol` run an
-  8-decimal fixed-point order queue with a per-pair matching discipline chosen at listing
-  time — size-priority or strict price-time priority. Nothing about pricing is implied by a
-  curve; a resting order is an exact declared price and size.
+  8-decimal fixed-point order queue. A resting order is an exact declared price and size;
+  nothing about pricing is implied by a curve.
+- **Inventory is pooled, and it rests on that same book.** `BandPool.sol` holds LP capital
+  in a ladder of bands; `BandPositionManager.sol` gives each position one ERC-1155 token
+  holding its whole ladder: the distribution, the fee checkpoints and one vesting clock.
+- **The reference price is time-weighted, not spot.** Bands price against a 300-second TWAP
+  anchor, and every pool print is clamped to the pair's rail before it reaches that anchor.
+  That is the load-bearing MEV mitigation, not an incidental choice.
+- **Unfilled demand becomes supply.** A swap settles what the book can fill now; the
+  remainder can rest as the trader's own order or as liquidity, deepening the book the next
+  swap draws from.
 
-- **Inventory is pooled, and it rests on that same book.** `Pool.sol` turns permissionless
-  LP capital into *ordinary limit orders* on the CLOB — not a second settlement primitive
-  beside it. A position is a price range plus a `slippageLimit`: the LP's own declared
-  tolerance. At swap time the pool assembles in-range positions tightest-tolerance-first
-  and submits both legs to the same matching engine everyone else trades against.
+## What we've measured, and what we haven't
 
-- **An LP's downside is bounded by their own signature.** Execution is bounded to
-  `TWAP × (1 ± slippageLimit)`. `slippageLimit = 0` is valid and means *only ever at the
-  reference price* — the structural answer to being the counterparty that validates a price
-  nobody should have accepted.
+The research repo carries a dependency-free simulation. In it, an LP whose fills are bounded
+to the reference price ± its own tolerance ends a 2× price move within **0.0013%** of simply
+holding, against **−5.7%** for Uniswap v2 and **−30.7%** for a ±10% v3 range. Two honest
+caveats:
 
-- **The reference price is time-weighted, not spot.** Pricing pool trades against
-  `Orderbook.twap` rather than the last matched price is the load-bearing MEV mitigation,
-  not an incidental choice.
+- That model was written for `Pool.sol`, the generation retired in September 2026. Band pools
+  keep the same fill bound, but **they have not been re-simulated yet**, so treat the figure as
+  the previous design's.
+- Bounded fills are not "no risk". If the price leaves your bands you end up holding the
+  other token. That is exposure, and it is real.
 
-- **Unfilled demand becomes supply.** Because settlement decomposes a trade into a
-  matched-now portion and a remainder, a partial fill still settles what it can and the rest
-  can rest as the trader's own order — deepening the book a swap draws from, rather than
-  reverting the way an all-or-nothing AMM route does.
-
-## What we measured — and what it costs
-
-Every number below comes from a dependency-free simulation released alongside the paper,
-and every one has a stated cost. Both halves are the point.
-
-| Claim | Result | The cost, stated |
-|---|---|---|
-| Impermanent loss is bounded by construction | 0.00% at `slippageLimit = 0`, −0.0013% at the widest tier tested, against −5.7% (v2) and −2.8% (v3) at a 2× price move | Occasional **partial fills** when tolerant in-range liquidity runs thin |
-| Same-block reference-price manipulation is damped | ~667× damping from the TWAP window; in the largest victim trade modelled, sandwich profit falls from ~$1,700 undamped to ~$2.55 — negative once the attacker pays their own gas | A **gas premium** over curve settlement |
-| A pool swap is more expensive than a curve swap | 717,574 gas measured vs. ~120k for a v2 swap | Break-even around **$5,000** of trade size at 30 gwei / $3,000 ETH, and around **$500** on cheap L2 blockspace |
-
-And the finding we are most willing to show — one against our own deployment: the
-simulation caught that `Pool.sol` **as currently wired** still charges the LP leg the 10bps
-maker fee and rebates a `poolFeeShare` that defaults to zero onchain, which makes the safest
-possible position (`slippageLimit = 0`) realise **−$1,000 per $1M matched** rather than the
-strictly-positive economics the intended fee design calls for. We found it by modelling
-ourselves, and it is written down in the paper rather than around it.
+The same simulation caught a flaw against our own deployment of the time: `Pool.sol` charged
+the LP leg the maker fee while its rebate defaulted to zero, which made the safest position
+lose money. We found it by modelling ourselves and wrote it into the paper instead of around it.
 
 ## Read the work
 
-- **[The research repo](https://github.com/rate-limo/rate-research)** — the
-  long-form working paper (*Every Market Answers Two Questions*), the condensed ACM
-  submission, the simulation that produces every figure above, and the ETHTokyo 2026 talk
-  materials.
-- **[The contracts](https://github.com/rate-limo/rate-contracts)** — the code the
-  paper cites by line number.
+- **[The research repo](https://github.com/rate-limo/rate-research)**: the working paper
+  (*Every Market Answers Two Questions*), the simulation behind every figure above, and the
+  ETHTokyo 2026 talk materials.
+- **[The contracts](https://github.com/rate-limo/rate-contracts)**: the code the paper cites.
 
-No token. No pitch. The paper, the simulations, and the numbers that go against us are
-published so they can be read, checked, and argued with.
+Rate runs on testnet today. Nothing here is investment advice.
 
 ---
 
-*First-principles market design. Claims stated with their costs. Long-term system design.*
+*Don't trade. Until you find your best rate.*
