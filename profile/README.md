@@ -44,6 +44,18 @@ are that side on your own terms.
 And when you do trade, trade at your rate: every fill on an open onchain order book, at a
 price you chose, self-custody the whole way.
 
+## Launch for holders, not flippers
+
+Create a token on the same book everyone trades on, two ways:
+
+- **Launch now.** The coin's supply is minted once: no mint function, no owner. It is
+  listed on the order book in the same transaction.
+- **Run an auction.** One price, set by the creator, for every buyer: no bonding curve and
+  no sniping race. An oversubscribed sale fills everyone pro-rata and refunds the rest; a sale
+  under its minimum refunds everyone in full. At least 20% of the raise becomes liquidity
+  that stays locked for a period the sale sets, and the creator's own tokens vest. If anyone
+  lists the token before the sale graduates, the sale fails and every buyer is refunded.
+
 ## How it works
 
 - **Settlement is a fully onchain CLOB.** `MatchingEngine.sol` + `Orderbook.sol` run an
@@ -81,7 +93,8 @@ lose money. We found it by modelling ourselves and wrote it into the paper inste
 - **[The research repo](https://github.com/rate-limo/rate-research)**: the working paper
   (*Every Market Answers Two Questions*), the simulation behind every figure above, and the
   ETHTokyo 2026 talk materials.
-- **[The contracts](https://github.com/rate-limo/rate-contracts)**: the code the paper cites.
+- **[The contracts](https://github.com/rate-limo/rate-contracts)**: the code the paper cites,
+  including `AssetGenerator.sol` and `PresaleLaunch.sol` for launches.
 
 Rate runs on testnet today. Nothing here is investment advice.
 
