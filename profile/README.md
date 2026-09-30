@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="assets/profile.png" alt="ITER" width="96" />
+  <img src="assets/profile.png" alt="Rate" width="96" />
 </div>
 
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="assets/iter-banner-light.png" />
-    <img src="assets/iter-banner-dark.png" alt="ITER — an onchain order book with pooled inventory" width="900" />
+    <source media="(prefers-color-scheme: light)" srcset="assets/rate-banner-light.png" />
+    <img src="assets/rate-banner-dark.png" alt="Rate — an onchain order book with pooled inventory" width="900" />
   </picture>
 </div>
 
@@ -35,7 +35,7 @@ its range. Order books answer settlement the way every mature financial market d
 explicit, price-prioritised quotes — but historically hand inventory back to professional
 market makers operating through a venue that hosts the book.
 
-**ITER answers both on one book.**
+**Rate answers both on one book.**
 
 ## How it works
 
@@ -84,11 +84,11 @@ ourselves, and it is written down in the paper rather than around it.
 
 ## Read the work
 
-- **[The research repo](https://github.com/off-grid-money/off-grid-research)** — the
+- **[The research repo](https://github.com/rate-limo/rate-research)** — the
   long-form working paper (*Every Market Answers Two Questions*), the condensed ACM
   submission, the simulation that produces every figure above, and the ETHTokyo 2026 talk
   materials.
-- **[The contracts](https://github.com/standarddotim/standard3.0-contracts)** — the code the
+- **[The contracts](https://github.com/rate-limo/rate-contracts)** — the code the
   paper cites by line number.
 
 No token. No pitch. The paper, the simulations, and the numbers that go against us are
