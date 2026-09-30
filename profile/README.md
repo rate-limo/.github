@@ -56,6 +56,20 @@ Create a token on the same book everyone trades on, two ways:
   that stays locked for a period the sale sets, and the creator's own tokens vest. If anyone
   lists the token before the sale graduates, the sale fails and every buyer is refunded.
 
+## Multichain
+
+One protocol, deployed natively on each chain: the same order book, the same launchpad and
+the same holder-first liquidity. One portfolio and one Explore view span every chain, and one
+profile follows your wallet everywhere.
+
+| Chain | Chain ID | Gas | Status |
+|---|---|---|---|
+| RISE Testnet | 11155931 | ETH | Live (testnet) |
+| Arc Testnet | 5042002 | USDC | Live (testnet) |
+
+A chain is added once its contracts are deployed and verified. The live list is on
+[rate.limo](https://rate.limo).
+
 ## How it works
 
 - **Settlement is a fully onchain CLOB.** `MatchingEngine.sol` + `Orderbook.sol` run an
