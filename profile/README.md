@@ -13,7 +13,7 @@
 
 ---
 
-## The rich don't trade. They hold.
+## The rich don't trade. They make their money work.
 
 Most of crypto is built to make you trade more: perps, leverage, points for volume.
 Every extra trade is a fee someone else collects. The evidence has been in for a long time:
@@ -23,7 +23,7 @@ Every extra trade is a fee someone else collects. The evidence has been in for a
 - Of people who day-traded Brazilian equity futures for more than 300 days, **97% lost money**
   (Chague, De-Losso & Giovannetti, [*Day Trading for a Living?*](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3423101), 2019).
 
-Wealth is built the other way: by owning and holding. So Rate pays holders.
+Wealth is built the other way: by putting money to work. Rate pays you for yours: provide liquidity, and the traders on the other side pay you the fee.
 
 ## Get paid to hold
 
